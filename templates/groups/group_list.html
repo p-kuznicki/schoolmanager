@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Web Page</title>
-    <!-- Add any additional meta tags, links, or scripts here -->
-</head>
-<body>
-    <header>
-        <h1>Welcome to My Website</h1>
-        <!-- Add navigation or header content here -->
-    </header>
+{% extends 'groups/base.html' %}
 
-    <main>
-        <!-- Your main content goes here -->
-        <p>Hello, world! This is a simple HTML boilerplate.</p>
-    </main>
-
-    <footer>
-        <!-- Footer content goes here -->
-        <p>&copy; 2023 My Website</p>
-    </footer>
-</body>
-</html>
+{% block content %}
+	<h1>Click on a group:</h1>
+	{% for group in groups %}
+	<h2><a href="{% url 'group_lessons' pk=group.pk %}">{{group.level}}</a><h2>
+        	<p></p>
+	{% endfor %}
+{% endblock %}
 
