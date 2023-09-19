@@ -3,7 +3,7 @@
 {% block content %}
 	<h1>Click on a group:</h1>
 	{% for group in groups %}
-	<h2><a href="{% url 'group_lessons' pk=group.pk %}">{{group.level}}</a><h2>
+	<h2><a href="{% url 'group_lessons' lvl=group.level %}">{{group.level}}</a><h2>
         	<p></p>
 	{% endfor %}
 {% endblock %}

@@ -1,5 +1,16 @@
 {% extends 'groups/base.html' %}
 
 {% block content %}
-fcuk
+<h2>Group: {{group.level}}</h2>
+
+{% for lesson in lessons %}
+<h3>{{lesson.date}} {{lesson.subject}}</h3>
+{% endfor %}
+
+<a href="{% url 'new_lesson' lvl=group.level %}">
+                    {% include './icons/file-earmark-plus.svg' %}create new lesson
+                </a>
+<br>
+<a href="{% url 'group_list' %}">
+	{% include './icons/arrow-return-left.svg' %}go back to group list</a>
 {% endblock %}
