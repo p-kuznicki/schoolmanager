@@ -31,7 +31,8 @@ class Lesson(ms.Model):
     date = ms.DateField(default= timezone.now)
     subject = ms.CharField(max_length=50, help_text="The subject of the lesson.")
     group = ms.ForeignKey(Group, on_delete=ms.CASCADE, help_text="The group that participated in the lesson.")
-    #students_absent = list of absent students
+    students_present = ms.ManyToManyField(Student, blank=True, related_name='lessons_present')
+    students_absent = ms.ManyToManyField(Student, blank=True, related_name='lessons_absent')
 
     def __str__(self):
         return f"{self.date}: {self.subject}"

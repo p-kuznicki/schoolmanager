@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Group, Lesson
+from .models import Group, Lesson, Student
 from .forms import CreateLessonForm
 
 
@@ -23,6 +23,16 @@ def create_lesson(request, lvl):
             lesson.group = group
             lesson.save()
             students_present= form.cleaned_data['students_present']
+            all_students = Student.objects.filter(group=group)
+            for student in all_students:
+                # Check if the student is present in the form's students_present field
+                if student in students_present:
+                    # If present, add them to the lesson's students_present field
+                     lesson.students_present.add(student)
+                else:
+                    # If absent, add them to the lesson's students_absent field
+                    lesson.students_absent.add(student)
+            lesson.save()
             return redirect('group_lessons', lvl=lvl)
     else:
         form = CreateLessonForm(group=group)
