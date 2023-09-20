@@ -17,12 +17,13 @@ def group_lessons(request, lvl):
 def create_lesson(request, lvl):
     group = get_object_or_404(Group, level=lvl)
     if request.method == 'POST':
-        form = CreateLessonForm(request.POST)
+        form = CreateLessonForm(request.POST, group=group)
         if form.is_valid():
             lesson = form.save(commit=False)
             lesson.group = group
             lesson.save()
+            students_present= form.cleaned_data['students_present']
             return redirect('group_lessons', lvl=lvl)
     else:
-        form = CreateLessonForm()
+        form = CreateLessonForm(group=group)
     return render(request, 'groups/lesson_edit.html', {'form': form})
