@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Group, Lesson, Student
 from .forms import CreateLessonForm
 from docx import Document
+from docx.shared import Inches
 
 
 # Create your views here.
@@ -24,12 +25,25 @@ def student_info(request, lvl, pk):
 
 def get_status(request, lvl):
     group = get_object_or_404(Group, level=lvl)
-    lessons = Lesson.objects.filter(group=group).order_by('-date')
+    lessons = Lesson.objects.filter(group=group).order_by('date')
     status = Document()
+    lesson_table = status.add_table(rows=1, cols=3)
+    lesson_table.columns[0].width = Inches(0.3)
+    lesson_table.columns[1].width = Inches(1.1)
+    lesson_table.columns[2].width = Inches(4.6)
+    lesson_table.style = 'Table Grid'
+    lesson_table.cell(0, 0).text = '#'
+    lesson_table.cell(0, 1).text = 'DATE'
+    lesson_table.cell(0, 2).text = 'LESSON PLAN'
+    row=0
     for lesson in lessons:
-        status.add_paragraph(str(lesson))
+        lesson_table.add_row()
+        row +=1
+        lesson_table.cell(row, 0).text = str(row)
+        lesson_table.cell(row, 1).text = str(lesson.date)
+        lesson_table.cell(row, 2).text = str(lesson.subject)
     response = HttpResponse(content_type='application/msword')
-    response['Content-Disposition'] = 'inline; filename="group_status.docx"'
+    response['Content-Disposition'] = f'inline; filename="Status of {group}.docx"'
     status.save(response)
     return response 
 
