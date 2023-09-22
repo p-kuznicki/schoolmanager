@@ -3,6 +3,9 @@
 {% block content %}
 <h2>Group: {{group.level}}</h2>
 
+<h4><a href="{% url 'get_status' lvl=group.level %}">download group status as a docx file</a></h4>
+
+
 <h3>Students Attending</h3>
 
 {% for student in students_in %}

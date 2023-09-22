@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
 from .models import Group, Lesson, Student
 from .forms import CreateLessonForm
+from docx import Document
 
 
 # Create your views here.
@@ -19,6 +21,18 @@ def student_info(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
     lessons_absent = student.lessons_absent.all()
     return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent})
+
+def get_status(request, lvl):
+    group = get_object_or_404(Group, level=lvl)
+    lessons = Lesson.objects.filter(group=group).order_by('-date')
+    status = Document()
+    for lesson in lessons:
+        status.add_paragraph(str(lesson))
+    response = HttpResponse(content_type='application/msword')
+    response['Content-Disposition'] = 'inline; filename="group_status.docx"'
+    status.save(response)
+    return response 
+
 
 def create_lesson(request, lvl):
     group = get_object_or_404(Group, level=lvl)
