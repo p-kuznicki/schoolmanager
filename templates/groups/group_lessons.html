@@ -3,8 +3,16 @@
 {% block content %}
 <h2>Group: {{group.level}}</h2>
 
+<h3>Students Attending</h3>
+
+{% for student in students_in %}
+<h5><a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">{{student}}</a></h5>
+{% endfor %}
+
+<h3>Lessons Completed</h3>
+
 {% for lesson in lessons %}
-<h3>{{lesson.date}} {{lesson.subject}}</h3>
+<h5>{{lesson.date}}<a href="{% url 'edit_lesson' lvl=group.level pk=lesson.pk %}">{{lesson.subject}}</a></h5>
 {% endfor %}
 
 <a href="{% url 'new_lesson' lvl=group.level %}">

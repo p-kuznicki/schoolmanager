@@ -1,0 +1,13 @@
+{% block content %}
+
+<h3>{{student}}</h3>
+
+<h4>Absencies:</h4>
+
+{% for lesson in lessons_absent %}
+<h5>{{lesson.date}}</h5>
+{% endfor %}
+
+
+{% endblock %}
+
