@@ -1,0 +1,18 @@
+{% extends 'groups/base.html' %}
+
+{% block content %}
+
+grade group {{group.level}}
+
+
+
+<form method="post">
+  {% csrf_token %}
+  {% for form in book_forms %}
+    {{ form.as_p }}
+  {% endfor %}
+  <button type="submit">Save Changes</button>
+</form>
+
+
+{% endblock %}

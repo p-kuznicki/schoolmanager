@@ -2,6 +2,10 @@
 
 <h3>{{student}}</h3>
 
+<a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
+		    {% include './icons/bar-chart-fill.svg' %}Grade Student</a>
+		    <br>
+
 <h4>Absencies:</h4>
 
 {% for lesson in lessons_absent %}

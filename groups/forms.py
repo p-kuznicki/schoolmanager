@@ -1,6 +1,20 @@
 
 from django import forms
-from .models import Lesson, Student
+from .models import Lesson, Student, SingleGrade
+from django.utils import timezone
+
+
+class SingleGradeForm(forms.ModelForm):
+    class Meta:
+        model = SingleGrade
+        fields = ('student', 'grade', 'description', 'date')
+
+    def __init__(self, *args, **kwargs):
+        student = kwargs.pop('student', None)
+        super(SingleGradeForm, self).__init__(*args, **kwargs)
+        if student is not None:
+            self.fields['student'].initial = student
+
 
 class CreateLessonForm(forms.ModelForm):
     students_present = forms.ModelMultipleChoiceField(queryset=Student.objects.all(),

@@ -1,0 +1,32 @@
+{% extends 'groups/base.html' %}
+
+{% block content %}
+
+grade group {{group.level}}
+
+<form method="post">
+  {% csrf_token %}
+  {{ date_form.date.label_tag }}
+  {{ date_form.date }}
+  <button type="submit">Save Date</button>
+</form>
+
+
+<form method="post">
+  {% csrf_token %}
+  {% for form in student_forms %}
+    <div>
+      {{ form.student.label_tag }}
+      {{ form.instance.student }}  {# Display student's name #}
+      <input type="hidden" name="{{ form.student.name }}" value="{{ form.student.value }}">
+    </div>
+    <div>
+      {{ form.grade.label_tag }}
+      {{ form.grade }}
+    </div>
+  {% endfor %}
+  <button type="submit">Save Grades</button>
+</form>
+
+
+{% endblock %}

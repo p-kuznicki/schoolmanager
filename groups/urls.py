@@ -3,9 +3,10 @@ from . import views
 
 urlpatterns = [
         path('', views.group_list, name='group_list'),
-        path('group/<str:lvl>/', views.group_lessons, name='group_lessons'),
-        path('group/<str:lvl>/new/', views.create_lesson, name='new_lesson'),
-        path('group/<str:lvl>/edit/<int:pk>/', views.edit_lesson, name='edit_lesson'),
-        path('group/<str:lvl>/<int:pk>/', views.student_info, name='student_info'),
-        path('group/<str:lvl>/status/', views.get_status, name='get_status'),
+        path('<str:lvl>/', views.group_lessons, name='group_lessons'),
+        path('<str:lvl>/new/', views.create_lesson, name='new_lesson'),
+        path('<str:lvl>/edit/<int:pk>/', views.edit_lesson, name='edit_lesson'),
+        path('<str:lvl>/<int:pk>/', views.student_info, name='student_info'),
+        path('<str:lvl>/<int:pk>/grade/', views.single_grade, name ='single_grade'),
+        path('<str:lvl>/status/', views.get_status, name='get_status'),
 ]

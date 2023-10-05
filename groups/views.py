@@ -1,12 +1,19 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Group, Lesson, Student
-from .forms import CreateLessonForm
+from .models import Group, Lesson, Student, SingleGrade
+from .forms import CreateLessonForm, SingleGradeForm
 from docx import Document
 from docx.shared import Inches
 
 
 # Create your views here.
+
+
+def single_grade(request, lvl, pk):
+    student = get_object_or_404(Student, pk=pk)
+    form = SingleGradeForm()
+    form.fields['student'].initial = student  # Set the initial value for the student field
+    return render(request, 'groups/single_grade.html', {'student':student, 'form':form})
 
 def group_list(request):
     groups = Group.objects.order_by('level')
@@ -19,9 +26,10 @@ def group_lessons(request, lvl):
     return render(request, 'groups/group_lessons.html', {'group':group, 'lessons':lessons, 'students_in':students_in})
 
 def student_info(request, lvl, pk):
+    group = get_object_or_404(Group, level=lvl)
     student = get_object_or_404(Student, pk=pk)
     lessons_absent = student.lessons_absent.all()
-    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent})
+    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group})
 
 def get_status(request, lvl):
     group = get_object_or_404(Group, level=lvl)

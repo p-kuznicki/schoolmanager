@@ -3,6 +3,7 @@ from django.utils import timezone
 
 # Create your models here.
 
+
 class Group(ms.Model):
     """
     Represents a group of students.
@@ -24,11 +25,27 @@ class Student(ms.Model):
     def __str__(self):
         return f"{self.surname} {self.name}"
 
+class SingleGrade(ms.Model):
+    """
+    fuck documentation
+    """
+    student = ms.ForeignKey(Student, on_delete=ms.CASCADE, help_text="no help text")
+    grade = ms.PositiveSmallIntegerField()
+    description = ms.CharField(max_length=100)
+    date = ms.DateField(default=timezone.now)
+    
+    def __init__(self, *args, **kwargs):
+        student = kwargs.pop('student', None)
+        super(SingleGrade, self).__init__(*args, **kwargs)
+        if student is not None:
+            self.student = student
+
+
 class Lesson(ms.Model):
     """
     Each lesson in a year. Contains date, subject and absencies.
     """
-    date = ms.DateField(default= timezone.now)
+    date = ms.DateField(default=timezone.now)
     subject = ms.CharField(max_length=50, help_text="The subject of the lesson.")
     group = ms.ForeignKey(Group, on_delete=ms.CASCADE, help_text="The group that participated in the lesson.")
     students_present = ms.ManyToManyField(Student, blank=True, related_name='lessons_present')
