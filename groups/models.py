@@ -34,11 +34,6 @@ class SingleGrade(ms.Model):
     description = ms.CharField(max_length=100)
     date = ms.DateField(default=timezone.now)
     
-    def __init__(self, *args, **kwargs):
-        student = kwargs.pop('student', None)
-        super(SingleGrade, self).__init__(*args, **kwargs)
-        if student is not None:
-            self.student = student
 
 
 class Lesson(ms.Model):

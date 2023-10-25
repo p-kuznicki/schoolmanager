@@ -5,12 +5,18 @@
 <a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
 		    {% include './icons/bar-chart-fill.svg' %}Grade Student</a>
 		    <br>
+<h4>Grades:</h4>
+
+{% for grade in grades %}
+<h5>{{grade.grade}} {{grade.description}} {{grade.date}}<a href="{% url 'edit_grade' lvl=group.level pk=student.pk pk2=grade.pk %}">edit grade</a></h5></h5>
+{% endfor %}
 
 <h4>Absencies:</h4>
 
 {% for lesson in lessons_absent %}
 <h5>{{lesson.date}}</h5>
 {% endfor %}
+
 
 
 {% endblock %}

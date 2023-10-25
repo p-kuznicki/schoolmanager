@@ -4,16 +4,40 @@ from .models import Group, Lesson, Student, SingleGrade
 from .forms import CreateLessonForm, SingleGradeForm
 from docx import Document
 from docx.shared import Inches
-
+from django.urls import reverse
+from django.utils import timezone
 
 # Create your views here.
 
 
+
+    
+    
 def single_grade(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
-    form = SingleGradeForm()
-    form.fields['student'].initial = student  # Set the initial value for the student field
-    return render(request, 'groups/single_grade.html', {'student':student, 'form':form})
+    if request.method == 'POST':
+        form = SingleGradeForm(request.POST)
+        if form.is_valid():
+            grade = form.save(commit=False)
+            grade.save()
+            return redirect(reverse('student_info', args=[lvl, pk]))
+    else:
+    	form = SingleGradeForm()
+    	form.fields['student'].initial = student  # Set the initial value for the student field
+    	return render(request, 'groups/single_grade.html', {'student':student, 'form':form})
+
+def edit_grade(request, lvl, pk, pk2):
+    grade = get_object_or_404(SingleGrade, pk=pk2)
+    if request.method == 'POST':
+    	form = SingleGradeForm(request.POST, instance=grade)
+    	if form.is_valid():
+    	    grade = form.save(commit=False)
+    	    grade.save()
+    	    return redirect(reverse('student_info', args=[lvl, pk]))
+    else:
+    	form = SingleGradeForm(instance=grade)
+    return render(request, 'groups/single_grade.html', {'form':form})
+
 
 def group_list(request):
     groups = Group.objects.order_by('level')
@@ -29,7 +53,8 @@ def student_info(request, lvl, pk):
     group = get_object_or_404(Group, level=lvl)
     student = get_object_or_404(Student, pk=pk)
     lessons_absent = student.lessons_absent.all()
-    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group})
+    grades = SingleGrade.objects.filter(student=student).order_by('date')
+    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group, 'grades':grades})
 
 def get_status(request, lvl):
     group = get_object_or_404(Group, level=lvl)

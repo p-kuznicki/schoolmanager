@@ -8,5 +8,6 @@ urlpatterns = [
         path('<str:lvl>/edit/<int:pk>/', views.edit_lesson, name='edit_lesson'),
         path('<str:lvl>/<int:pk>/', views.student_info, name='student_info'),
         path('<str:lvl>/<int:pk>/grade/', views.single_grade, name ='single_grade'),
+        path('<str:lvl>/<int:pk>/edit/<int:pk2>/', views.edit_grade, name ='edit_grade'),
         path('<str:lvl>/status/', views.get_status, name='get_status'),
 ]
