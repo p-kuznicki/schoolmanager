@@ -1,0 +1,15 @@
+{% block content %}
+    <h2>Delete Student Confirmation</h2>
+    <p>Are you sure you want to delete this sudent?</p>
+    <p><strong>Name:</strong> {{ student.name }}</p>
+    <p><strong>Surname:</strong> {{ student.surname }}</p>
+    <p><strong>Gropup:</strong> {{ student.group }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+
+    <a href="{% url 'group_lessons' lvl=student.group.level %}">Cancel</a>
+{% endblock %}
+

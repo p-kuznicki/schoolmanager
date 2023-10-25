@@ -1,10 +1,18 @@
 
 from django import forms
-from .models import Lesson, Student, SingleGrade
+from .models import Lesson, Student, SingleGrade, Group
 
 class TextFieldForm(forms.Form):
     text_field = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
+class NameForm(forms.Form):
+    name_field = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    surname_field = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = '__all__'
 
 class SingleGradeForm(forms.ModelForm):
     class Meta:

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Group, Lesson, Student, SingleGrade
-from .forms import CreateLessonForm, SingleGradeForm, TextFieldForm
+from .forms import CreateLessonForm, SingleGradeForm, TextFieldForm, NameForm, GroupForm
 from docx import Document
 from docx.shared import Inches
 from django.urls import reverse
@@ -9,6 +9,47 @@ from django.utils import timezone
 
 # Create your views here.
 
+def add_group(request):
+    if request.method == 'POST':
+        form = GroupForm(request.POST)
+        if form.is_valid():
+            group = form.save(commit=False)
+            group.save()
+            return redirect('group_list')
+    else:
+    	form = GroupForm()
+    return render(request, 'groups/add_group.html', {'form':form})
+
+def delete_group(request, lvl):
+   group = get_object_or_404(Group, level=lvl)
+   if request.method == 'POST':
+        group.delete()
+        return redirect('group_list')
+
+   return render(request, 'groups/delete_group_confirm.html', {'group': group})
+
+def add_student(request, lvl):
+   group = get_object_or_404(Group, level=lvl)
+   if request.method == 'POST':
+       form = NameForm(request.POST)
+       if form.is_valid():
+           name = form.cleaned_data['name_field']
+           surname = form.cleaned_data['surname_field']
+                      # Create a new Student instance
+           student = Student(name=name, surname=surname, group=group)
+           student.save()  # Save the new student to the database
+           return redirect('group_lessons', lvl=lvl)
+   else:
+       form = NameForm()
+   return render(request, 'groups/add_student.html', {'form': form})
+
+def delete_student(request, lvl, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        student.delete()
+        return redirect('group_lessons', lvl=lvl)
+
+    return render(request, 'groups/delete_student_confirm.html', {'student': student})
 
 def edit_opinion(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -18,6 +59,7 @@ def edit_opinion(request, lvl, pk):
             student.opinion = form.cleaned_data['text_field']
             student.save()  # Save the student instance to update the opinion field
             # Process or save the text_value here
+            return redirect(reverse('student_info', args=[lvl, pk]))
     else:
         # Pass the current opinion as initial data to the form
         form = TextFieldForm(initial={'text_field': student.opinion})

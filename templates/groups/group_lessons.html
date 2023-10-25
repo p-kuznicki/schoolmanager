@@ -7,6 +7,9 @@
 
 <a href="{% url 'new_lesson' lvl=group.level %}">
                     {% include './icons/calendar2-check.svg' %}create new lesson</a>
+                    <br>
+<a href="{% url 'add_student' lvl=group.level %}">
+	{% include './icons/person-plus.svg' %}add student</a>
 
 <br>
 
@@ -20,13 +23,18 @@
 <h3>Students Attending</h3>
 
 {% for student in students_in %}
-<h5>{{student}}<a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">
+<br>
+<h5>{{student}}</h5>
+<h6><a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">
 			{% include './icons/bar-chart-fill.svg' %}   Student Info</a>
-		<a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
-		    	{% include './icons/award.svg' %}   Grade Student</a></h5>
-
+<a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
+		    	{% include './icons/award.svg' %}   Grade Student</a>
+<a href="{% url 'delete_student' lvl=group.level pk=student.pk %}">
+		    	{% include './icons/person-x-fill.svg' %}   Delete Student</a>
+</h6>
 {% endfor %}
 
+<br>
 
 
 <h3>Lessons Completed</h3>
