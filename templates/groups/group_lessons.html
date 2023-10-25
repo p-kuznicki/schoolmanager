@@ -20,7 +20,11 @@
 <h3>Students Attending</h3>
 
 {% for student in students_in %}
-<h5><a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">{{student}}</a></h5>
+<h5>{{student}}<a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">
+			{% include './icons/bar-chart-fill.svg' %}   Student Info</a>
+		<a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
+		    	{% include './icons/award.svg' %}   Grade Student</a></h5>
+
 {% endfor %}
 
 

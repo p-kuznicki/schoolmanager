@@ -9,7 +9,15 @@ from django.utils import timezone
 
 # Create your views here.
 
+def delete_grade(request, lvl, pk, pk2):
+    student = get_object_or_404(Student, pk=pk)
+    grade = get_object_or_404(SingleGrade, pk=pk2)
 
+    if request.method == 'POST':
+        grade.delete()
+        return redirect(reverse('student_info', args=[lvl, pk]))
+
+    return render(request, 'groups/delete_grade_confirm.html', {'student': student, 'grade': grade})
 
     
     
