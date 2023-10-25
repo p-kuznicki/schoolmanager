@@ -21,6 +21,7 @@ class Student(ms.Model):
     name = ms.CharField(max_length=20, help_text="The student's first name.")
     surname = ms.CharField(max_length=20, help_text="The student's last name.")
     group = ms.ForeignKey(Group, on_delete=ms.CASCADE, help_text="The group to which the student belongs.")
+    opinion = ms.TextField(blank=True)
   
     def __str__(self):
         return f"{self.surname} {self.name}"

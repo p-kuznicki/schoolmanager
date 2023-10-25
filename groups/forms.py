@@ -2,6 +2,8 @@
 from django import forms
 from .models import Lesson, Student, SingleGrade
 
+class TextFieldForm(forms.Form):
+    text_field = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 
 class SingleGradeForm(forms.ModelForm):

@@ -1,13 +1,27 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Group, Lesson, Student, SingleGrade
-from .forms import CreateLessonForm, SingleGradeForm
+from .forms import CreateLessonForm, SingleGradeForm, TextFieldForm
 from docx import Document
 from docx.shared import Inches
 from django.urls import reverse
 from django.utils import timezone
 
 # Create your views here.
+
+
+def edit_opinion(request, lvl, pk):
+    student = get_object_or_404(Student, pk=pk)
+    if request.method == 'POST':
+        form = TextFieldForm(request.POST)
+        if form.is_valid():
+            student.opinion = form.cleaned_data['text_field']
+            student.save()  # Save the student instance to update the opinion field
+            # Process or save the text_value here
+    else:
+        # Pass the current opinion as initial data to the form
+        form = TextFieldForm(initial={'text_field': student.opinion})
+    return render(request, 'groups/edit_opinion.html', {'form': form})
 
 def delete_grade(request, lvl, pk, pk2):
     student = get_object_or_404(Student, pk=pk)

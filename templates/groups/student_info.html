@@ -2,6 +2,13 @@
 
 <h3>{{student}}</h3>
 
+<h4>Notes about the student: <a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">
+		    {% include './icons/card-text.svg' %}Edit Note</a></h4>
+<br>
+{{student.opinion}} 
+<br>
+
+
 <a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
 		    {% include './icons/award.svg' %}Grade Student</a>
 		    <br>
