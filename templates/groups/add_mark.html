@@ -2,6 +2,9 @@
 
 {% block content %}
 
+<a href="{% url 'group_lessons' lvl=student.group.level %}">
+		{% include './icons/arrow-return-left.svg' %} Go back to the group</a>
+
 <h2> Add grade for {{student}} </h2>
 	<form method='POST'>{% csrf_token %}
 		{{ form.as_p }}

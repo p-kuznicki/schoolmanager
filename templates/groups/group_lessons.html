@@ -41,7 +41,12 @@
 
 
 {% for lesson in lessons %}
-<h5>{{lesson.date}}<a href="{% url 'edit_lesson' lvl=group.level pk=lesson.pk %}">{{lesson.subject}}</a></h5>
+<br>
+<h5>{{lesson.date}}  {{lesson.subject}}</h5>
+<h6><a href="{% url 'edit_lesson' lvl=group.level pk=lesson.pk %}">
+			{% include './icons/list-check.svg' %}   Edit Lesson</a>
+<a href="{% url 'delete_lesson' lvl=group.level pk=lesson.pk %}">
+		    	{% include './icons/trash.svg' %}   Delete Lesson</a></h6>
 {% endfor %}
 
 

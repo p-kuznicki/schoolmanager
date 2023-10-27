@@ -7,6 +7,7 @@
     {{ form.as_p }}
     <input type="submit" value="Submit">
 </form>
-
+<a href="{% url 'student_info' lvl=student.group.level pk=student.pk %}">
+		{% include './icons/arrow-return-left.svg' %}Cancel</a>
 
 {% endblock %}

@@ -27,6 +27,17 @@ def delete_group(request, lvl):
         return redirect('group_list')
 
    return render(request, 'groups/delete_group_confirm.html', {'group': group})
+   
+def delete_lesson(request, lvl, pk):
+    group = get_object_or_404(Group, level=lvl)
+    lesson = get_object_or_404(Lesson, pk=pk)
+    if request.method == 'POST':
+        lesson.delete()
+        return redirect('group_lessons', lvl=lvl)
+    else:
+        form = CreateLessonForm(group=group, instance=lesson)
+    return render(request, 'groups/delete_lesson.html', {'lesson': lesson})
+
 
 def add_student(request, lvl):
    group = get_object_or_404(Group, level=lvl)
@@ -41,7 +52,7 @@ def add_student(request, lvl):
            return redirect('group_lessons', lvl=lvl)
    else:
        form = NameForm()
-   return render(request, 'groups/add_student.html', {'form': form})
+   return render(request, 'groups/add_student.html', {'form': form, 'group': group})
 
 def delete_student(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -63,7 +74,7 @@ def edit_opinion(request, lvl, pk):
     else:
         # Pass the current opinion as initial data to the form
         form = TextFieldForm(initial={'text_field': student.opinion})
-    return render(request, 'groups/edit_opinion.html', {'form': form})
+    return render(request, 'groups/edit_opinion.html', {'form': form, 'student':student})
 
 def delete_grade(request, lvl, pk, pk2):
     student = get_object_or_404(Student, pk=pk)
@@ -195,5 +206,5 @@ def edit_lesson(request, lvl, pk):
     else:
         initial_present_students = lesson.students_present.all()
         form = CreateLessonForm(group=group, instance=lesson)
-    return render(request, 'groups/lesson_edit.html', {'form': form})
+    return render(request, 'groups/lesson_edit.html', {'form': form, 'group':group})
 

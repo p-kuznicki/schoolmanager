@@ -1,5 +1,8 @@
 {% block content %}
 
+<a href="{% url 'group_lessons' lvl=student.group.level %}">
+		{% include './icons/arrow-return-left.svg' %} Go back to the group</a>
+
 <h3>{{student}}</h3>
 
 <h4>Notes about the student: <a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">

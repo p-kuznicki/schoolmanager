@@ -1,7 +1,10 @@
 {% extends 'groups/base.html' %}
 
 {% block content %}
-
+<a href="{% url 'group_lessons' lvl=group.level %}">
+		{% include './icons/arrow-return-left.svg' %} Cancel</a>
+		<br>
+Add a new student
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
