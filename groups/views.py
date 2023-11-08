@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Group, Lesson, Student, SingleGrade
-from .forms import CreateLessonForm, SingleGradeForm, TextFieldForm, NameForm, GroupForm
+from .models import Group, Lesson, Student, SingleGrade, PersonalNote
+from .forms import CreateLessonForm, SingleGradeForm, NameForm, GroupForm, PersonalNoteForm #, TextFieldForm
 from docx import Document
 from docx.shared import Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -63,7 +63,7 @@ def delete_student(request, lvl, pk):
         return redirect('group_lessons', lvl=lvl)
 
     return render(request, 'groups/delete_student_confirm.html', {'student': student})
-
+"""
 def edit_opinion(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == 'POST':
@@ -77,6 +77,21 @@ def edit_opinion(request, lvl, pk):
         # Pass the current opinion as initial data to the form
         form = TextFieldForm(initial={'text_field': student.opinion})
     return render(request, 'groups/edit_opinion.html', {'form': form, 'student':student})
+"""
+
+def edit_opinion(request, lvl, pk):
+    student = get_object_or_404(Student, pk=pk)
+    group = get_object_or_404(Group, level=lvl)
+    if request.method == 'POST':
+        form = PersonalNoteForm(request.POST)
+        if form.is_valid():
+            note = form.save(commit=False)
+            note.save()
+            return redirect(reverse('student_info', args=[lvl, pk]))
+    else:
+    	form = PersonalNoteForm()
+    	form.fields['student'].initial = student  # Set the initial value for the student field
+    	return render(request, 'groups/single_grade.html', {'student':student, 'form':form, 'group':group})
 
 def delete_grade(request, lvl, pk, pk2):
     student = get_object_or_404(Student, pk=pk)
@@ -88,7 +103,15 @@ def delete_grade(request, lvl, pk, pk2):
 
     return render(request, 'groups/delete_grade_confirm.html', {'student': student, 'grade': grade})
 
-    
+def delete_note(request, lvl, pk, pk2):
+    student = get_object_or_404(Student, pk=pk)
+    note = get_object_or_404(PersonalNote, pk=pk2)
+
+    if request.method == 'POST':
+        note.delete()
+        return redirect(reverse('student_info', args=[lvl, pk]))
+
+    return render(request, 'groups/delete_note_confirm.html', {'student': student, 'note': note})    
     
 def single_grade(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
@@ -133,7 +156,8 @@ def student_info(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
     lessons_absent = student.lessons_absent.all()
     grades = SingleGrade.objects.filter(student=student).order_by('date')
-    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group, 'grades':grades})
+    notes = PersonalNote.objects.filter(student=student).order_by('date')
+    return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group, 'grades':grades, 'notes':notes})
 
 def create_lesson(request, lvl):
     group = get_object_or_404(Group, level=lvl)

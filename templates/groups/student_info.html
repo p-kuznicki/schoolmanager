@@ -8,8 +8,11 @@
 <h2>{{student}}</h2>
 
 <h4>Notes:</h4> 
-{{student.opinion}} <a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">
-		    {% include './icons/card-text.svg' %}Edit Note</a></h4>
+{% for note in notes %}
+<h5>{{note.note}}  ({{note.date}})  <a href="{% url 'delete_note' lvl=group.level pk=student.pk pk2=note.pk %}">{% include './icons/trash.svg' %}</a></h5>
+{% endfor %}
+<a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">
+		    {% include './icons/card-text.svg' %}Add Note</a></h4>
 <br>
 <br>
 

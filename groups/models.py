@@ -21,7 +21,7 @@ class Student(ms.Model):
     name = ms.CharField(max_length=20, help_text="The student's first name.")
     surname = ms.CharField(max_length=20, help_text="The student's last name.")
     group = ms.ForeignKey(Group, on_delete=ms.CASCADE, help_text="The group to which the student belongs.")
-    opinion = ms.TextField(blank=True)
+#    opinion = ms.TextField(blank=True)
   
     def __str__(self):
         return f"{self.surname} {self.name}"
@@ -30,11 +30,18 @@ class SingleGrade(ms.Model):
     """
     fuck documentation
     """
-    student = ms.ForeignKey(Student, on_delete=ms.CASCADE, help_text="no help text")
+    student = ms.ForeignKey(Student, on_delete=ms.CASCADE)
     grade = ms.PositiveSmallIntegerField()
     description = ms.CharField(max_length=100)
     date = ms.DateField(default=timezone.now)
     
+class PersonalNote(ms.Model):
+    """
+    mid-year notes to the parents
+    """
+    student = ms.ForeignKey(Student, on_delete=ms.CASCADE)
+    note = ms.TextField(max_length=500)
+    date = ms.DateField(default=timezone.now)
 
 
 class Lesson(ms.Model):

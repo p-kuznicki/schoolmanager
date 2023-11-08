@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Lesson, Student, SingleGrade, Group
+from .models import Lesson, Student, SingleGrade, Group, PersonalNote
 
 class TextFieldForm(forms.Form):
     text_field = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
@@ -25,6 +25,16 @@ class SingleGradeForm(forms.ModelForm):
         if student is not None:
             self.fields['student'].initial = student
             
+class PersonalNoteForm(forms.ModelForm):
+    class Meta:
+        model = PersonalNote
+        fields = ('student', 'note', 'date')
+
+    def __init__(self, *args, **kwargs):
+        student = kwargs.pop('student', None)
+        super(PersonalNoteForm, self).__init__(*args, **kwargs)
+        if student is not None:
+            self.fields['student'].initial = student            
 
 class CreateLessonForm(forms.ModelForm):
     students_present = forms.ModelMultipleChoiceField(queryset=Student.objects.all(),

@@ -1,0 +1,17 @@
+{% extends 'groups/base.html' %}
+
+{% block content %}
+    <h2>Delete Note Confirmation</h2>
+    <a href="{% url 'group_lessons' lvl=student.group.level %}">Cancel</a>
+    <p>Are you sure you want to delete this note?</p>
+    <p><strong>Note:</strong> {{ note.note }}</p>
+    <p><strong>Date:</strong> {{ note.date }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+    </form>
+    
+    
+{% endblock %}
+
