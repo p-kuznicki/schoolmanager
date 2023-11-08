@@ -244,25 +244,31 @@ def get_report(request, lvl):
     students = Student.objects.filter(group=group).order_by('surname')
 #    lessons = Lesson.objects.filter(group=group).order_by('date')
     report = Document()
+    font = report.styles['Normal'].font
+    font.name = 'Liberation Serif' 
+    default_font_size = Pt(12)
+    report.styles['Normal'].font.size = default_font_size
     for student in students:
         p1 = report.add_paragraph(text='Raport postępów w nauce')
         p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
         font = p1.runs[0].font
-        font.size = Pt(10)
-        p2 = report.add_paragraph(text='data - data')
+        font.size = Pt(12)
+        font.bold = True 
+        p2 = report.add_paragraph(text='wrzesień 2023 - 12.11.2023 r.')
         p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
         font = p2.runs[0].font
-        font.size = Pt(10)
+        font.size = Pt(12)
+        font.bold = True 
         report.add_paragraph('')
         p3 = report.add_paragraph(text='Imię i nazwisko słuchacza:')
         p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
         font = p3.runs[0].font
-        font.size = Pt(10)
+        font.size = Pt(12)
         report.add_paragraph('')
-        p4 = report.add_paragraph(text = f'{str(student.name)} {str(student.surname)}')
+        p4 = report.add_paragraph(text = f'{str(student.name).upper()} {str(student.surname).upper()}')
         p4.alignment = WD_ALIGN_PARAGRAPH.CENTER
         font = p4.runs[0].font
-        font.size = Pt(20)
+        font.size = Pt(18)
         report.add_paragraph('')
         p5 = report.add_paragraph(text = 'Oceny:  ')
         font = p5.runs[0].font
@@ -280,9 +286,14 @@ def get_report(request, lvl):
             r = p6.add_run(lesson.date.strftime('%d-%m') + ', ')
             r.font.color.rgb = RGBColor(250, 128, 114)
         report.add_paragraph('')
-        p7 = report.add_paragraph(text = f'Uwagi lektora: {student.opinion}')
+        notes = PersonalNote.objects.filter(student=student).order_by('date')
+        p7 = report.add_paragraph(text = 'Uwagi lektora:')
         font = p7.runs[0].font
         font.color.rgb = RGBColor(0, 128, 0)  # RGB color for a non-vibrant green
+        for note in notes:
+            p7 = report.add_paragraph(text = note.note)
+            font = p7.runs[0].font
+            font.color.rgb = RGBColor(0, 128, 0)  # RGB color for a non-vibrant green
         
         report.add_page_break()
 	

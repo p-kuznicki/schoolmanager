@@ -2,8 +2,8 @@
 from django import forms
 from .models import Lesson, Student, SingleGrade, Group, PersonalNote
 
-class TextFieldForm(forms.Form):
-    text_field = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+#class TextFieldForm(forms.Form):
+#    text_field = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
 
 class NameForm(forms.Form):
     name_field = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'class': 'form-control'}))
