@@ -2,53 +2,60 @@
 
 {% block content %}
 
+<a href="{% url 'group_list' %}">
+	{% include './icons/arrow-return-left.svg' %}go back to group list</a>
 
 <h2>Group: {{group.level}}</h2>
 
-<a href="{% url 'new_lesson' lvl=group.level %}">
-                    {% include './icons/calendar2-check.svg' %}create new lesson</a>
-                    <br>
-<a href="{% url 'add_student' lvl=group.level %}">
-	{% include './icons/person-plus.svg' %}add student</a>
 
-<br>
 
 <a href="{% url 'get_status' lvl=group.level %}">
-		    {% include './icons/clipboard-data.svg' %}download group status as a docx file</a>
+		    {% include './icons/clipboard-data.svg' %}download group info </a>
 <br>
-<a href="{% url 'group_list' %}">
-	{% include './icons/arrow-return-left.svg' %}go back to group list</a>
+<a href="{% url 'get_report' lvl=group.level %}">
+		    {% include './icons/clipboard-data.svg' %}download quaterly report</a>
 <br>
 
-<h3>Students Attending</h3>
-
+<h2>Students Attending</h2>
+<a href="{% url 'add_student' lvl=group.level %}">
+	{% include './icons/person-plus.svg' %}add student</a>
 {% for student in students_in %}
-<br>
-<h5>{{student}}</h5>
-<h6><a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">
-			{% include './icons/bar-chart-fill.svg' %}   Student Info</a>
+<h5>{{student}}<a href="{% url 'student_info' lvl=group.level  pk=student.pk %}">
+			{% include './icons/bar-chart-fill.svg' %}   Info</a>
 <a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
-		    	{% include './icons/award.svg' %}   Grade Student</a>
+		    	{% include './icons/award.svg' %}   Grade</a>
 <a href="{% url 'delete_student' lvl=group.level pk=student.pk %}">
-		    	{% include './icons/person-x-fill.svg' %}   Delete Student</a>
-</h6>
+		    	{% include './icons/person-x-fill.svg' %}   Remove</a>
+</h5>
 {% endfor %}
 
+
+<h2>Lessons Completed</h2>
+
+<a href="{% url 'new_lesson' lvl=group.level %}">
+                    {% include './icons/calendar2-check.svg' %}create new lesson</a>
 <br>
-
-
-<h3>Lessons Completed</h3>
-
-
+<br>
+                    
+<table>
+<colgroup>
+      <col style="width: 20%;"> <!-- Set the width of the first column to 30% for table1 -->
+      <col style="width: 80%;"> <!-- Set the width of the second column to 70% for table1 -->
+    </colgroup>         
+<tr>
+<th>Date</th>
+<th>Subject</th>
+</tr>
 {% for lesson in lessons %}
-<br>
-<h5>{{lesson.date}}  {{lesson.subject}}</h5>
-<h6><a href="{% url 'edit_lesson' lvl=group.level pk=lesson.pk %}">
-			{% include './icons/list-check.svg' %}   Edit Lesson</a>
-<a href="{% url 'delete_lesson' lvl=group.level pk=lesson.pk %}">
-		    	{% include './icons/trash.svg' %}   Delete Lesson</a></h6>
+<tr>
+<td>{{lesson.date}}</td>
+<td>
+<h5><a href="{% url 'edit_lesson' lvl=group.level pk=lesson.pk %}">     {{lesson.subject}}</a>
+<a href="{% url 'delete_lesson' lvl=group.level pk=lesson.pk %}">{% include './icons/trash.svg' %}</a></h5>
+</td>
+</tr>
 {% endfor %}
 
-
+<table>
 
 {% endblock %}

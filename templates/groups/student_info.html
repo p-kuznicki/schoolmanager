@@ -1,26 +1,51 @@
+{% extends 'groups/base.html' %}
+
 {% block content %}
 
 <a href="{% url 'group_lessons' lvl=student.group.level %}">
 		{% include './icons/arrow-return-left.svg' %} Go back to the group</a>
 
-<h3>{{student}}</h3>
+<h2>{{student}}</h2>
 
-<h4>Notes about the student: <a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">
+<h4>Notes:</h4> 
+{{student.opinion}} <a href="{% url 'edit_opinion' lvl=group.level pk=student.pk %}">
 		    {% include './icons/card-text.svg' %}Edit Note</a></h4>
-{{student.opinion}} 
+<br>
 <br>
 
-
+<h2>Grades:</h2>
 <a href="{% url 'single_grade' lvl=group.level pk=student.pk %}">
 		    {% include './icons/award.svg' %}Grade Student</a>
-		    <br>
-<h4>Grades:</h4>
 
+<table>
+<colgroup>
+      <col style="width: 5%;"> <!-- Set the width of the first column to 30% for table1 -->
+      <col style="width: 30%;"> <!-- Set the width of the second column to 70% for table1 -->
+      <col style="width: 25%;"> <!-- Set the width of the first column to 30% for table1 -->
+      <col style="width: 40%;"> <!-- Set the width of the second column to 70% for table1 -->
+    </colgroup>
+<tr>
+<th>Grade</th>
+<th>Info</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+		   
 {% for grade in grades %}
-<h5>{{grade.grade}} {{grade.description}} {{grade.date}}<a href="{% url 'edit_grade' lvl=group.level pk=student.pk pk2=grade.pk %}">edit grade</a><a href="{% url 'delete_grade' lvl=group.level pk=student.pk pk2=grade.pk %}">delete grade</a></h5>
+<tr>
+<td>{{grade.grade}}</td>
+<td>{{grade.description}}</td>
+<td>{{grade.date}}</td>
+<td><a href="{% url 'edit_grade' lvl=group.level pk=student.pk pk2=grade.pk %}"> edit grade</a>
+<     >    
+<a href="{% url 'delete_grade' lvl=group.level pk=student.pk pk2=grade.pk %}">delete grade</a></h5>
+</td>
+<tr>
 {% endfor %}
 
-<h4>Absencies:</h4>
+</table>
+
+<h2>Absencies:</h2>
 
 {% for lesson in lessons_absent %}
 <h5>{{lesson.date}}</h5>

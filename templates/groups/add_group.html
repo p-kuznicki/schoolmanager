@@ -1,6 +1,9 @@
 {% extends 'groups/base.html' %}
 
 {% block content %}
+
+    <a href="{% url 'group_list' %}">{% include './icons/arrow-return-left.svg' %}Cancel</a>
+    
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

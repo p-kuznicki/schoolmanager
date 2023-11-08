@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<a href="{% url 'group_lessons' lvl=student.group.level %}">
+<a href="{% url 'group_lessons' lvl=group.level %}">
 		{% include './icons/arrow-return-left.svg' %} Go back to the group</a>
 		
 <form method='POST'>{% csrf_token %}

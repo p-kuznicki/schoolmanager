@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from .models import Group, Lesson, Student, SingleGrade
 from .forms import CreateLessonForm, SingleGradeForm, TextFieldForm, NameForm, GroupForm
 from docx import Document
+from docx.shared import Pt, RGBColor
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Inches
 from django.urls import reverse
 from django.utils import timezone
@@ -90,6 +92,7 @@ def delete_grade(request, lvl, pk, pk2):
     
 def single_grade(request, lvl, pk):
     student = get_object_or_404(Student, pk=pk)
+    group = get_object_or_404(Group, level=lvl)
     if request.method == 'POST':
         form = SingleGradeForm(request.POST)
         if form.is_valid():
@@ -99,9 +102,10 @@ def single_grade(request, lvl, pk):
     else:
     	form = SingleGradeForm()
     	form.fields['student'].initial = student  # Set the initial value for the student field
-    	return render(request, 'groups/single_grade.html', {'student':student, 'form':form})
+    	return render(request, 'groups/single_grade.html', {'student':student, 'form':form, 'group':group})
 
 def edit_grade(request, lvl, pk, pk2):
+    group = get_object_or_404(Group, level=lvl)
     grade = get_object_or_404(SingleGrade, pk=pk2)
     if request.method == 'POST':
     	form = SingleGradeForm(request.POST, instance=grade)
@@ -111,7 +115,7 @@ def edit_grade(request, lvl, pk, pk2):
     	    return redirect(reverse('student_info', args=[lvl, pk]))
     else:
     	form = SingleGradeForm(instance=grade)
-    return render(request, 'groups/single_grade.html', {'form':form})
+    return render(request, 'groups/single_grade.html', {'form':form, 'group':group})
 
 
 def group_list(request):
@@ -130,31 +134,6 @@ def student_info(request, lvl, pk):
     lessons_absent = student.lessons_absent.all()
     grades = SingleGrade.objects.filter(student=student).order_by('date')
     return render(request, 'groups/student_info.html', {'student':student, 'lessons_absent':lessons_absent, 'group':group, 'grades':grades})
-
-def get_status(request, lvl):
-    group = get_object_or_404(Group, level=lvl)
-    lessons = Lesson.objects.filter(group=group).order_by('date')
-    status = Document()
-    lesson_table = status.add_table(rows=1, cols=3)
-    lesson_table.columns[0].width = Inches(0.3)
-    lesson_table.columns[1].width = Inches(1.1)
-    lesson_table.columns[2].width = Inches(4.6)
-    lesson_table.style = 'Table Grid'
-    lesson_table.cell(0, 0).text = '#'
-    lesson_table.cell(0, 1).text = 'DATE'
-    lesson_table.cell(0, 2).text = 'LESSON PLAN'
-    row=0
-    for lesson in lessons:
-        lesson_table.add_row()
-        row +=1
-        lesson_table.cell(row, 0).text = str(row)
-        lesson_table.cell(row, 1).text = str(lesson.date)
-        lesson_table.cell(row, 2).text = str(lesson.subject)
-    response = HttpResponse(content_type='application/msword')
-    response['Content-Disposition'] = f'inline; filename="Status of {group}.docx"'
-    status.save(response)
-    return response 
-
 
 def create_lesson(request, lvl):
     group = get_object_or_404(Group, level=lvl)
@@ -178,7 +157,7 @@ def create_lesson(request, lvl):
             return redirect('group_lessons', lvl=lvl)
     else:
         form = CreateLessonForm(group=group)
-    return render(request, 'groups/lesson_edit.html', {'form': form})
+    return render(request, 'groups/lesson_edit.html', {'form': form, 'group':group})
 
 def edit_lesson(request, lvl, pk):
     group = get_object_or_404(Group, level=lvl)
@@ -207,4 +186,85 @@ def edit_lesson(request, lvl, pk):
         initial_present_students = lesson.students_present.all()
         form = CreateLessonForm(group=group, instance=lesson)
     return render(request, 'groups/lesson_edit.html', {'form': form, 'group':group})
+
+#___________________________________________________________
+#_________________download functions________________________
+#___________________________________________________________
+
+def get_status(request, lvl):
+    group = get_object_or_404(Group, level=lvl)
+    lessons = Lesson.objects.filter(group=group).order_by('date')
+    status = Document()
+    lesson_table = status.add_table(rows=1, cols=3)
+    lesson_table.columns[0].width = Inches(0.3)
+    lesson_table.columns[1].width = Inches(1.1)
+    lesson_table.columns[2].width = Inches(4.6)
+    lesson_table.style = 'Table Grid'
+    lesson_table.cell(0, 0).text = '#'
+    lesson_table.cell(0, 1).text = 'DATE'
+    lesson_table.cell(0, 2).text = 'LESSON PLAN'
+    row=0
+    for lesson in lessons:
+        lesson_table.add_row()
+        row +=1
+        lesson_table.cell(row, 0).text = str(row)
+        lesson_table.cell(row, 1).text = str(lesson.date)
+        lesson_table.cell(row, 2).text = str(lesson.subject)
+    response = HttpResponse(content_type='application/msword')
+    response['Content-Disposition'] = f'inline; filename="Status of {group}.docx"'
+    status.save(response)
+    return response 
+
+def get_report(request, lvl):
+    group = get_object_or_404(Group, level=lvl)
+    students = Student.objects.filter(group=group).order_by('surname')
+#    lessons = Lesson.objects.filter(group=group).order_by('date')
+    report = Document()
+    for student in students:
+        p1 = report.add_paragraph(text='Raport postępów w nauce')
+        p1.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        font = p1.runs[0].font
+        font.size = Pt(10)
+        p2 = report.add_paragraph(text='data - data')
+        p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        font = p2.runs[0].font
+        font.size = Pt(10)
+        report.add_paragraph('')
+        p3 = report.add_paragraph(text='Imię i nazwisko słuchacza:')
+        p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        font = p3.runs[0].font
+        font.size = Pt(10)
+        report.add_paragraph('')
+        p4 = report.add_paragraph(text = f'{str(student.name)} {str(student.surname)}')
+        p4.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        font = p4.runs[0].font
+        font.size = Pt(20)
+        report.add_paragraph('')
+        p5 = report.add_paragraph(text = 'Oceny:  ')
+        font = p5.runs[0].font
+        font.color.rgb = RGBColor(0, 191, 255)  # RGB color for light blue
+        grades = SingleGrade.objects.filter(student=student).order_by('date')
+        for grade in grades:
+            r = p5.add_run(str(grade.grade) + ', ')
+            r.font.color.rgb = RGBColor(0, 191, 255)
+        report.add_paragraph('')
+        p6 = report.add_paragraph(text = 'Daty nieobecności:  ')
+        font = p6.runs[0].font
+        font.color.rgb = RGBColor(250, 128, 114)  # RGB color for salmon
+        lessons_absent = student.lessons_absent.all()
+        for lesson in lessons_absent:
+            r = p6.add_run(lesson.date.strftime('%d-%m') + ', ')
+            r.font.color.rgb = RGBColor(250, 128, 114)
+        report.add_paragraph('')
+        p7 = report.add_paragraph(text = f'Uwagi lektora: {student.opinion}')
+        font = p7.runs[0].font
+        font.color.rgb = RGBColor(0, 128, 0)  # RGB color for a non-vibrant green
+        
+        report.add_page_break()
+	
+		
+    response = HttpResponse(content_type='application/msword')
+    response['Content-Disposition'] = f'inline; filename="quaterly report for group {group}.docx"'
+    report.save(response)
+    return response 
 

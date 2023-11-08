@@ -1,0 +1,21 @@
+html { background:#E0F4FF ;}
+body {
+    font-family: Purisa;
+}
+
+h1 {    color:#FFEED9 ;
+	background-color:#39A7FF ;}
+h2 {    color:#FFEED9 ;
+	background-color:#87C4FF ;}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
+

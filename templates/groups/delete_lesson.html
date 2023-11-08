@@ -1,5 +1,10 @@
+{% extends 'groups/base.html' %}
+
 {% block content %}
+
+    
     <h2>Delete Lesson Confirmation</h2>
+    <a href="{% url 'group_lessons' lvl=lesson.group.level %}">{% include './icons/arrow-return-left.svg' %}Cancel</a>
     <p>Are you sure you want to delete this Lesson?</p>
     <p><strong>Date:</strong> {{ lesson.date }}</p>
     <p><strong>Subject:</strong> {{ lesson.subject }}</p>
@@ -10,6 +15,6 @@
         <button type="submit">Confirm Delete</button>
     </form>
 
-    <a href="{% url 'group_lessons' lvl=lesson.group.level %}">Cancel</a>
+
 {% endblock %}
 

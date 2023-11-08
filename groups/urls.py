@@ -17,4 +17,5 @@ urlpatterns = [
         path('<str:lvl>/<int:pk>/delete/<int:pk2>/', views.delete_grade, name='delete_grade'),
         path('<str:lvl>/<int:pk>/edit/<int:pk2>/', views.edit_grade, name ='edit_grade'),
         path('<str:lvl>/status/', views.get_status, name='get_status'),
+        path('<str:lvl>/report/', views.get_report, name='get_report'),
 ]

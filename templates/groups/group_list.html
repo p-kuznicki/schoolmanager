@@ -1,14 +1,14 @@
 {% extends 'groups/base.html' %}
 
 {% block content %}
-	<h4><a href="{% url 'add_group' %}">{% include './icons/people.svg' %} Add Group</a></h4>
-        	<p></p>
-	<h1>Click on a group:</h1>
+	
+	<h2>Your Groups</h2>
 	{% for group in groups %}
-	<h2><a href="{% url 'group_lessons' lvl=group.level %}">{{group.level}}</a></h2>
-        	<p></p>
-        <h5><a href="{% url 'delete_group' lvl=group.level %}">{% include './icons/trash.svg' %}Delete Group</a></h2>
+	<h3>	<a href="{% url 'group_lessons' lvl=group.level %}">{{group.level}}</a>
+		<a href="{% url 'delete_group' lvl=group.level %}">{% include './icons/trash.svg' %}</a></h3>
         	<p></p>
 	{% endfor %}
+	<h4><a href="{% url 'add_group' %}">{% include './icons/people.svg' %} Add Group</a></h4>
+        	<p></p>
 {% endblock %}
 
