@@ -1,12 +1,16 @@
 html { background:#E0F4FF ;}
 body {
-    font-family: Purisa;
+    font-family: Verdana;
 }
 
 h1 {    color:#FFEED9 ;
-	background-color:#39A7FF ;}
+	background-color:#39A7FF ;
+	text-align:center;}
+	
+h1.logo {text-align:left;}
 h2 {    color:#FFEED9 ;
-	background-color:#87C4FF ;}
+	background-color:#39A7FF  ;
+	padding:4px}
 
 table {
   border-collapse: collapse;

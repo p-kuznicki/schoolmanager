@@ -5,9 +5,9 @@
 <a href="{% url 'group_lessons' lvl=student.group.level %}">
 		{% include './icons/arrow-return-left.svg' %} Go back to the group</a>
 
-<h2>{{student}}</h2>
+<h1>{{student}}</h1>
 
-<h4>Notes:</h4> 
+<h2>Notes:</h2> 
 {% for note in notes %}
 <h5>{{note.note}}  ({{note.date}})  <a href="{% url 'delete_note' lvl=group.level pk=student.pk pk2=note.pk %}">{% include './icons/trash.svg' %}</a></h5>
 {% endfor %}
@@ -40,7 +40,7 @@
 <td>{{grade.description}}</td>
 <td>{{grade.date}}</td>
 <td><a href="{% url 'edit_grade' lvl=group.level pk=student.pk pk2=grade.pk %}"> edit grade</a>
-<     >    
+&nbsp;&nbsp;&nbsp;&nbsp;         
 <a href="{% url 'delete_grade' lvl=group.level pk=student.pk pk2=grade.pk %}">delete grade</a></h5>
 </td>
 <tr>
